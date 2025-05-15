@@ -83,7 +83,7 @@ export class UserService {
     return { id: updateInput.id, ...updatedUser };
   }
 
-  async deleteUser(id: string): Promise<DeleteUserPayload> {
+  async delete(id: string): Promise<DeleteUserPayload> {
     const user = await this._userRepository.findOne({
       where: { id: id },
     });

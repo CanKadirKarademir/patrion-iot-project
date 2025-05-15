@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyEntity } from 'database';
 import {
@@ -51,7 +55,7 @@ export class CompanyService {
       where: { id: updateInput.id },
     });
     if (!company) {
-      throw new Error('Company not found');
+      throw new NotFoundException('Company not found');
     }
     const updatedCompany = this._companyRepository.update(
       { id: updateInput.id },
@@ -63,12 +67,12 @@ export class CompanyService {
     return { id: updateInput.id };
   }
 
-  async deleteCompany(id: string): Promise<DeleteComnpanyPayload> {
+  async delete(id: string): Promise<DeleteComnpanyPayload> {
     const company = await this._companyRepository.findOne({
       where: { id },
     });
     if (!company) {
-      throw new Error('Company not found');
+      throw new NotFoundException('Company not found');
     }
     const deletedCompany = await this._companyRepository.softDelete({ id });
 

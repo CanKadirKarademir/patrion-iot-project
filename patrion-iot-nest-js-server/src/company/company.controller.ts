@@ -50,6 +50,6 @@ export class CompanyController {
   @ApiGenericResponse(DeleteComnpanyPayload, 'DELETE', 'COMPANY')
   @Delete('delete')
   async deleteCompany(@Query('id') id: string): Promise<DeleteComnpanyPayload> {
-    return await this._companyService.deleteCompany(id);
+    return await this._companyService.delete(id);
   }
 }

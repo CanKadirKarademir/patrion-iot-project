@@ -62,6 +62,6 @@ export class UserController {
     @Query('id') id: string,
     // @TokenPayloadDecorator() tokenPayload: TokenPayload,
   ): Promise<UpdateUserPayload> {
-    return await this._userService.deleteUser(id);
+    return await this._userService.delete(id);
   }
 }

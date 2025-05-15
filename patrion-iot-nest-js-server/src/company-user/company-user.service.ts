@@ -72,7 +72,7 @@ export class CompanyUserService {
     return savedCompanyUser;
   }
 
-  async deleteCompanyUser(id: string): Promise<DeleteCompanyUserPayload> {
+  async delete(id: string): Promise<DeleteCompanyUserPayload> {
     const companyUser = await this._companyUserRepository.findOne({
       where: { id: id },
     });

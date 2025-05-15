@@ -7,3 +7,4 @@ export * from './action-log';
 export * from './influxdb';
 export * from './company';
 export * from './company-user';
+export * from './iot-sensor';

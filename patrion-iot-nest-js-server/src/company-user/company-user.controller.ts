@@ -44,6 +44,6 @@ export class CompanyUserController {
   async deleteCompanyUser(
     @Query('id') id: string,
   ): Promise<DeleteCompanyUserPayload> {
-    return await this._companyUserService.deleteCompanyUser(id);
+    return await this._companyUserService.delete(id);
   }
 }
