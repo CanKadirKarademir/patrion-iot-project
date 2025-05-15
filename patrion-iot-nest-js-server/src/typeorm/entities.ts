@@ -1,3 +1,13 @@
-import { ActionLogEntity, CompanyEntity, UserEntity } from 'database';
+import {
+  ActionLogEntity,
+  CompanyEntity,
+  CompanyUserEntity,
+  UserEntity,
+} from 'database';
 
-export const entities = [ActionLogEntity, UserEntity, CompanyEntity];
+export const entities = [
+  ActionLogEntity,
+  UserEntity,
+  CompanyEntity,
+  CompanyUserEntity,
+];

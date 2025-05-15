@@ -49,7 +49,13 @@ export class UserService {
     }
     const user = this._userRepository.create(createInput);
 
-    return this._userRepository.save(user);
+    const savedUser = await this._userRepository.save(user);
+
+    if (!savedUser) {
+      throw new BadRequestException('Failed to create user');
+    }
+
+    return savedUser;
   }
 
   async updateUser(updateInput: UpdateUserInput): Promise<UpdateUserPayload> {
@@ -70,6 +76,10 @@ export class UserService {
       },
     );
 
+    if (!updatedUser) {
+      throw new BadRequestException('Failed to update user');
+    }
+
     return { id: updateInput.id, ...updatedUser };
   }
 
@@ -82,7 +92,11 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
 
-    await this._userRepository.softDelete({ id: id });
+    const deletedUser = await this._userRepository.softDelete({ id: id });
+
+    if (!deletedUser) {
+      throw new BadRequestException('Failed to delete user');
+    }
     return { id: id };
   }
 }

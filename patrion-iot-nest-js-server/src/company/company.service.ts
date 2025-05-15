@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CompanyEntity } from 'database';
 import {
@@ -36,7 +36,12 @@ export class CompanyService {
     createInput: CreateCompanyInput,
   ): Promise<CreateCompanyPayload> {
     const company = this._companyRepository.create(createInput);
-    return this._companyRepository.save(company);
+    const savedCompany = this._companyRepository.save(company);
+
+    if (!savedCompany) {
+      throw new BadRequestException('Failed to create company');
+    }
+    return savedCompany;
   }
 
   async updateCompany(
@@ -52,6 +57,9 @@ export class CompanyService {
       { id: updateInput.id },
       { ...updateInput },
     );
+    if (!updatedCompany) {
+      throw new BadRequestException('Failed to update company');
+    }
     return { id: updateInput.id };
   }
 
@@ -62,7 +70,12 @@ export class CompanyService {
     if (!company) {
       throw new Error('Company not found');
     }
-    await this._companyRepository.delete({ id });
+    const deletedCompany = await this._companyRepository.softDelete({ id });
+
+    if (!deletedCompany) {
+      throw new BadRequestException('Failed to delete company');
+    }
+
     return { id: id };
   }
 }
