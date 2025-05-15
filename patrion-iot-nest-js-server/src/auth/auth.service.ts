@@ -25,77 +25,35 @@ export class AuthService {
 
   private readonly _name: string = 'USER';
 
-  // async login(loginInput: LoginInput, source: string): Promise<LoginPayload> {
-  //   let filter = {};
-  //   if (loginInput.platform === UserPlatformTypeEnum.mobile) {
-  //     if (!loginInput.identityNumber) {
-  //       throw new HttpException(
-  //         'Identity number is required for mobile platform.',
-  //         HttpStatus.EXPECTATION_FAILED,
-  //       );
-  //     }
-  //     filter = {
-  //       identityNumber: loginInput.identityNumber,
-  //       platform: loginInput.platform,
-  //     };
-  //   }
+  async login(loginInput: LoginInput): Promise<LoginPayload> {
+    const user = await this._userRepository.findOne({
+      where: { email: loginInput.email },
+    });
 
-  //   if (loginInput.platform === UserPlatformTypeEnum.web) {
-  //     if (!loginInput.email) {
-  //       throw new HttpException(
-  //         'Email is required for web platform.',
-  //         HttpStatus.EXPECTATION_FAILED,
-  //       );
-  //     }
-  //     filter = {
-  //       email: loginInput.email,
-  //       platform: loginInput.platform,
-  //     };
-  //   }
-  //   const user = await this._userRepository.findOne({
-  //     where: filter,
-  //     relations: {
-  //       userSubscription: true,
-  //     },
-  //   });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
-  //   if (!user) {
-  //     throw new UnauthorizedException({
-  //       statusCode: HttpStatus.UNAUTHORIZED,
-  //       message: 'User not found with this email and in this platform.',
-  //     });
-  //   }
+    const isPasswordValid = await user.comparePassword(loginInput.password);
 
-  //   if (user) {
-  //     if (!(await user.comparePassword(loginInput.password))) {
-  //       throw new UnauthorizedException({
-  //         statusCode: HttpStatus.UNAUTHORIZED,
-  //         message: 'Invalid password.',
-  //       });
-  //     } else {
-  //       const payload: TokenPayload = {
-  //         userId: user.id,
-  //         email: user.email,
-  //         source: source,
-  //       };
-  //       return {
-  //         userInformation: {
-  //           id: user.id,
-  //           fullName: user.firstName + ' ' + user.lastName,
-  //           identityNumber: user.identityNumber,
-  //           email: user.email,
-  //           phone: user.phone,
-  //           state: user.registrationState,
-  //           subscriptionState: user.userSubscription
-  //             ? user.userSubscription.subscriptionState
-  //             : null,
-  //         },
-  //         token: await this._jwtService.signAsync(payload, {
-  //           privateKey: await this.configService.get('JWT_SECRET_KEY'),
-  //           expiresIn: '7d',
-  //         }),
-  //       };
-  //     }
-  //   }
-  // }
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const tokenPayload: TokenPayload = {
+      userId: user.id,
+      email: user.email,
+      role: user.role,
+    };
+
+    const token = this._jwtService.sign(tokenPayload, {
+      privateKey: this.configService.get('JWT_SECRET_KEY'),
+      expiresIn: '1h',
+    });
+
+    return {
+      ...tokenPayload,
+      token,
+    };
+  }
 }

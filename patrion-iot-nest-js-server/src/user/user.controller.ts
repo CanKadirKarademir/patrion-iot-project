@@ -26,7 +26,7 @@ import {
 } from 'models';
 
 @ApiGenericHeader('User')
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('user')
 export class UserController {
   constructor(private readonly _userService: UserService) {}
