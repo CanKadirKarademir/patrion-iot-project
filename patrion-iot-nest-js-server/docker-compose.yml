@@ -1,0 +1,30 @@
+#migration or without migration !! m // wm
+version: '0.0.5'
+services:
+  patrion-iot-nest-js-server:
+    build: .
+    image: patrion-iot-nest-js-server:0.1
+    environment:
+      PROJECT_TITLE: ${PROJECT_TITLE}
+      PROJECT_DESCRIPTION: ${PROJECT_DESCRIPTION}
+      PORT: ${PORT}
+      TYPEORM_DATABASE_TYPE: ${TYPEORM_DATABASE_TYPE}
+      TYPEORM_HOST: ${TYPEORM_HOST}
+      TYPEORM_PORT: ${TYPEORM_PORT}
+      TYPEORM_USERNAME: ${TYPEORM_USERNAME}
+      TYPEORM_PASSWORD: ${TYPEORM_PASSWORD}
+      TYPEORM_DATABASE: ${TYPEORM_DATABASE}
+      TYPEORM_SYNCHRONIZE: ${TYPEORM_SYNCHRONIZE}
+      TYPEORM_LOGGING: ${TYPEORM_LOGGING}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY}
+      STAGE: ${STAGE}
+      TOKEN: ${TOKEN}
+    ports:
+      - '3200:3200'
+    networks:
+      local_networks:
+      default:
+
+networks:
+  local_networks:
+    external: true

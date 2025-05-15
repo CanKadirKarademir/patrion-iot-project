@@ -1,0 +1,58 @@
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+
+@Entity({
+  name: 'action_logs',
+})
+export class ActionLogEntity {
+  @PrimaryGeneratedColumn('increment')
+  id: number;
+
+  @Column({ nullable: true, name: 'user_id' })
+  userId: string;
+
+  @Column({ nullable: true })
+  ip: string;
+
+  @Column({ nullable: true })
+  url?: string;
+
+  @Column({
+    type: 'enum',
+    enum: ['success', 'failure'],
+  })
+  type: string;
+
+  @Column({
+    type: 'enum',
+    enum: ['typeorm', 'http'],
+    nullable: true,
+    name: 'exception_type',
+  })
+  exceptionType?: string;
+
+  @Column({ type: 'json', nullable: true })
+  body?: any;
+
+  @Column({ type: 'json', nullable: true })
+  headers?: any;
+
+  @Column({ nullable: true })
+  method: string;
+
+  @Column({ nullable: true, name: 'status_code' })
+  statusCode?: number;
+
+  @Column({ nullable: true, name: 'typeorm_code' })
+  typeORMCode?: string;
+
+  @Column({ nullable: true })
+  message?: string;
+
+  @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
+  createdAt: Date;
+}
