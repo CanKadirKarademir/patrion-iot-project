@@ -17,6 +17,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MqttModule } from './mqtt/mqtt.module';
 import { InfluxModule } from './influx/influx.module';
 import { CompanyModule } from './company/company.module';
+import { CompanyUserModule } from './company-user/company-user.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { CompanyModule } from './company/company.module';
     MqttModule,
     InfluxModule,
     CompanyModule,
+    CompanyUserModule,
   ],
   controllers: [],
   providers: [
