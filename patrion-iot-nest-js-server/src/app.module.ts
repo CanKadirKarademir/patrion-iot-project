@@ -19,6 +19,7 @@ import { InfluxModule } from './influx/influx.module';
 import { CompanyModule } from './company/company.module';
 import { CompanyUserModule } from './company-user/company-user.module';
 import { IotSensorModule } from './iot-tsensor/iot-tsensor.module';
+import { CompanyIotSensorModule } from './company-iot-sensor/company-iot-sensor.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { IotSensorModule } from './iot-tsensor/iot-tsensor.module';
     CompanyModule,
     CompanyUserModule,
     IotSensorModule,
+    CompanyIotSensorModule,
   ],
   controllers: [],
   providers: [

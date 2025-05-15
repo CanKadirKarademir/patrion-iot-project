@@ -1,6 +1,7 @@
 import {
   ActionLogEntity,
   CompanyEntity,
+  CompanyIotSensorEntity,
   CompanyUserEntity,
   UserEntity,
 } from 'database';
@@ -12,4 +13,5 @@ export const entities = [
   CompanyEntity,
   CompanyUserEntity,
   IotSensorEntity,
+  CompanyIotSensorEntity,
 ];
