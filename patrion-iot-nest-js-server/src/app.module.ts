@@ -18,6 +18,7 @@ import { MqttModule } from './mqtt/mqtt.module';
 import { InfluxModule } from './influx/influx.module';
 import { CompanyModule } from './company/company.module';
 import { CompanyUserModule } from './company-user/company-user.module';
+import { IoTsensorModule } from './io-tsensor/io-tsensor.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { CompanyUserModule } from './company-user/company-user.module';
     InfluxModule,
     CompanyModule,
     CompanyUserModule,
+    IoTsensorModule,
   ],
   controllers: [],
   providers: [
