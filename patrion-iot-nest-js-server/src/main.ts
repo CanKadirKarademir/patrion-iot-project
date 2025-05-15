@@ -13,15 +13,15 @@ async function bootstrap() {
     rawBody: true,
   });
 
-  app.connectMicroservice<MicroserviceOptions>({
-    transport: Transport.MQTT,
-    options: {
-      host: 'localhost',
-      port: 1883,
-      username: 'user1',
-      password: '1234',
-    },
-  });
+  // app.connectMicroservice<MicroserviceOptions>({
+  //   transport: Transport.MQTT,
+  //   options: {
+  //     host: 'localhost',
+  //     port: 1883,
+  //     username: 'user1',
+  //     password: '1234',
+  //   },
+  // });
 
   app.enableCors();
   app.useGlobalInterceptors(new ResponseTransformInterceptor());
@@ -93,7 +93,7 @@ async function bootstrap() {
     )
     .build();
 
-  await app.startAllMicroservices();
+  //await app.startAllMicroservices();
   await app.listen(port);
   Logger.log(`🚀 Application is running on: http://localhost:${port}/api`);
 }

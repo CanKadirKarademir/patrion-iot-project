@@ -16,6 +16,7 @@ import { eventListeners } from './utils/event-listeners';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { MqttModule } from './mqtt/mqtt.module';
 import { InfluxModule } from './influx/influx.module';
+import { CompanyModule } from './company/company.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { InfluxModule } from './influx/influx.module';
     EventEmitterModule.forRoot(),
     MqttModule,
     InfluxModule,
+    CompanyModule,
   ],
   controllers: [],
   providers: [
