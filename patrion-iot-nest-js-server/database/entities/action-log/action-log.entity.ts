@@ -1,3 +1,4 @@
+import { ActionTypeEnum } from 'models';
 import {
   Column,
   CreateDateColumn,
@@ -55,4 +56,12 @@ export class ActionLogEntity {
 
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;
+
+  @Column({
+    type: 'enum',
+    enum: ActionTypeEnum,
+    default: ActionTypeEnum.default,
+    name: 'action_type',
+  })
+  actionType: ActionTypeEnum;
 }
