@@ -14,9 +14,21 @@ export class IotSensorHistoryEntity extends DateColumnsAbstract {
   @Column({ type: 'timestamptz', nullable: true, name: 'timestamp' })
   timestamp: Date;
 
-  @Column({ nullable: true, name: 'humidity' })
+  @Column({
+    type: 'decimal',
+    precision: 12,
+    scale: 6,
+    nullable: true,
+    name: 'humidity',
+  })
   humidity: number;
 
-  @Column({ nullable: true, name: 'temperature' })
+  @Column({
+    type: 'decimal',
+    precision: 12,
+    scale: 6,
+    nullable: true,
+    name: 'temperature',
+  })
   temperature: number;
 }

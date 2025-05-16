@@ -20,7 +20,7 @@ export class MqttService {
       { length: 3 },
       (_, index) => ({
         sensor_id: `sensor_${index}`,
-        timestamp: Date.now(),
+        timestamp: new Date(),
         temperature: Math.random() * 100,
         humidity: Math.random() * 100,
       }),
@@ -28,7 +28,7 @@ export class MqttService {
 
     notificationPayload.push({
       sensor_id: 'sensor_4',
-      timestamp: Date.now(),
+      timestamp: new Date(),
       temperature: null,
       humidity: null,
     });

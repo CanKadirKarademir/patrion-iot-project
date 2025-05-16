@@ -1,6 +1,6 @@
 export class SensorDataInput {
   sensor_id?: string;
-  timestamp?: number;
+  timestamp?: Date;
   temperature?: number;
   humidity?: number;
 }
