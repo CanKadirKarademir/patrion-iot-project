@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
-import { Logger } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ResponseTransformInterceptor } from './utils';
 import { NestExpressApplication } from '@nestjs/platform-express';
@@ -26,6 +26,16 @@ async function bootstrap() {
   app.enableCors();
   app.useGlobalInterceptors(new ResponseTransformInterceptor());
   app.useBodyParser('json', { limit: '10mb' });
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+      whitelist: true,
+      skipMissingProperties: false,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
+    }),
+  );
 
   const configService = app.get(ConfigService);
   const port = configService.get('PORT') || 3200;

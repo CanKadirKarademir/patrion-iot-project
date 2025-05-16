@@ -1,3 +1,3 @@
-import { UserEntity } from 'database';
+import { CompanyUserEntity, UserEntity } from 'database';
 
-export const authEntitites = [UserEntity];
+export const authEntitites = [UserEntity, CompanyUserEntity];

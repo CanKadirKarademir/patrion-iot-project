@@ -6,6 +6,7 @@ import {
   CreateCompanyIotSensorPayload,
   ListAllCompanyIotSensorInput,
   ListAllCompanyIotSensorPayload,
+  RoleBasedQueryParameter,
 } from 'models';
 import { Repository } from 'typeorm';
 
@@ -17,11 +18,15 @@ export class CompanyIotSensorService {
   ) {}
 
   async listAll(
+    roleBasedQueryParam: RoleBasedQueryParameter,
     listInput: ListAllCompanyIotSensorInput,
   ): Promise<ListAllCompanyIotSensorPayload[]> {
     const companyIotSensors = await this._companyIotSensorRepository.find({
       where: {
-        companyId: listInput.companyId,
+        companyId: roleBasedQueryParam.companyId
+          ? roleBasedQueryParam.companyId
+          : listInput.companyId,
+        userId: roleBasedQueryParam.userId ? roleBasedQueryParam.userId : null,
       },
       relations: {
         iotSensor: true,

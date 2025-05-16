@@ -2,6 +2,7 @@ import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import {
   ApiGenericHeader,
   ApiGenericResponse,
+  CreateRoleBasedQueryParam,
   JwtAuthGuard,
   RolesGuard,
   UserRoles,
@@ -12,17 +13,13 @@ import {
   CreateCompanyIotSensorPayload,
   ListAllCompanyIotSensorInput,
   ListAllCompanyIotSensorPayload,
+  RoleBasedQueryParameter,
   UserRoleEnum,
 } from 'models';
 import { ApiOperation } from '@nestjs/swagger';
 
 @ApiGenericHeader('Company Iot Sensor')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@UserRoles(
-  UserRoleEnum.SystemAdmin,
-  UserRoleEnum.CompanyAdmin,
-  UserRoleEnum.User,
-)
 @Controller('company-iot-sensor')
 export class CompanyIotSensorController {
   constructor(
@@ -38,11 +35,21 @@ export class CompanyIotSensorController {
     summary:
       'List all company IoT sensors for a specific company, user, and IoT sensor',
   })
+  @UserRoles(
+    UserRoleEnum.SystemAdmin,
+    UserRoleEnum.CompanyAdmin,
+    UserRoleEnum.User,
+  )
   @Get('list')
   async listAll(
+    @CreateRoleBasedQueryParam('data')
+    roleBasedQueryParam: RoleBasedQueryParameter,
     @Query() listInput: ListAllCompanyIotSensorInput,
   ): Promise<ListAllCompanyIotSensorPayload[]> {
-    return await this._companyIotSensorService.listAll(listInput);
+    return await this._companyIotSensorService.listAll(
+      roleBasedQueryParam,
+      listInput,
+    );
   }
 
   @ApiGenericResponse(
@@ -50,6 +57,7 @@ export class CompanyIotSensorController {
     'CREATE',
     'COMPANY IOT SENSOR',
   )
+  @UserRoles(UserRoleEnum.SystemAdmin)
   @Post('create')
   async createCompanyIotSensor(
     @Body() createInput: CreateCompanyIotSensorInput,

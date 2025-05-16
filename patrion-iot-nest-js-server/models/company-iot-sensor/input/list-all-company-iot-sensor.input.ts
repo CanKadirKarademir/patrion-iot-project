@@ -1,6 +1,6 @@
-import { PartialType } from '@nestjs/swagger';
+import { PartialType, PickType } from '@nestjs/swagger';
 import { CreateCompanyIotSensorInput } from '.';
 
 export class ListAllCompanyIotSensorInput extends PartialType(
-  CreateCompanyIotSensorInput,
+  PickType(CreateCompanyIotSensorInput, ['companyId', 'userId']),
 ) {}

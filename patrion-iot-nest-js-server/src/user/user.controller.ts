@@ -12,6 +12,7 @@ import { UserService } from './user.service';
 import {
   ApiGenericHeader,
   ApiGenericResponse,
+  CreateRoleBasedQueryParam,
   RolesGuard,
   TokenPayloadDecorator,
   UserRoles,
@@ -22,6 +23,7 @@ import {
   CreateUserPayload,
   DeleteUserPayload,
   ListAllUserPayload,
+  RoleBasedQueryParameter,
   TokenPayload,
   UpdateUserInput,
   UpdateUserPayload,
@@ -37,9 +39,12 @@ export class UserController {
 
   @ApiGenericResponse(ListAllUserPayload, 'LIST', 'USER')
   @Get('list')
-  async listAllUsers(): // @TokenPayloadDecorator() tokenPayload: TokenPayload,
-  Promise<ListAllUserPayload[]> {
-    return this._userService.listAllUsers();
+  async listAllUsers(
+    @CreateRoleBasedQueryParam('data')
+    roleBasedQueryParam: RoleBasedQueryParameter,
+    @TokenPayloadDecorator() tokenPayload: TokenPayload,
+  ): Promise<ListAllUserPayload[]> {
+    return this._userService.listAllUsers(roleBasedQueryParam);
   }
 
   @ApiGenericResponse(CreateUserPayload, 'CREATE', 'USER')

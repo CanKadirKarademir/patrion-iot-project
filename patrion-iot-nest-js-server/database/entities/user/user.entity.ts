@@ -4,9 +4,11 @@ import {
   BeforeInsert,
   BeforeUpdate,
   PrimaryGeneratedColumn,
+  OneToMany,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import { DateColumnsAbstract, UserRoleEnum } from 'models';
+import { CompanyUserEntity } from '../company';
 
 @Entity({
   name: 'users',
@@ -34,6 +36,9 @@ export class UserEntity extends DateColumnsAbstract {
     name: 'role',
   })
   role: UserRoleEnum;
+
+  @OneToMany(() => CompanyUserEntity, (companyUser) => companyUser.user)
+  companyUsers: CompanyUserEntity[];
 
   @BeforeInsert()
   @BeforeUpdate()

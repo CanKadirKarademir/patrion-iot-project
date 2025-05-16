@@ -7,7 +7,7 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { UserEntity } from 'database';
+import { CompanyUserEntity, UserEntity } from 'database';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
@@ -19,6 +19,8 @@ export class AuthService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly _userRepository: Repository<UserEntity>,
+    @InjectRepository(CompanyUserEntity)
+    private readonly _companyUserRepository: Repository<CompanyUserEntity>,
     private _jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
@@ -40,10 +42,15 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
 
+    const companyUser = await this._companyUserRepository.findOne({
+      where: { userId: user.id },
+    });
+
     const tokenPayload: TokenPayload = {
       userId: user.id,
       email: user.email,
       role: user.role,
+      companyId: companyUser ? companyUser.companyId : null,
     };
 
     const token = this._jwtService.sign(tokenPayload, {

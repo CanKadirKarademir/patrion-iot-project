@@ -63,10 +63,7 @@ import { CompanyIotSensorModule } from './company-iot-sensor/company-iot-sensor.
       provide: APP_PIPE,
       useClass: TrimPipe,
     },
-    {
-      provide: APP_PIPE,
-      useClass: ValidationPipe,
-    },
+
     ...eventListeners,
   ],
   exports: [AuthModule],

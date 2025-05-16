@@ -15,6 +15,7 @@ import {
   CreateUserPayload,
   DeleteUserPayload,
   ListAllUserPayload,
+  RoleBasedQueryParameter,
   UpdateUserInput,
   UpdateUserPayload,
 } from 'models';
@@ -26,8 +27,19 @@ export class UserService {
     private readonly _userRepository: Repository<UserEntity>,
   ) {}
 
-  async listAllUsers(): Promise<ListAllUserPayload[]> {
-    const users = await this._userRepository.find({});
+  async listAllUsers(
+    roleBasedQueryParam: RoleBasedQueryParameter,
+  ): Promise<ListAllUserPayload[]> {
+    const users = await this._userRepository.find({
+      where: {
+        companyUsers: {
+          companyId: roleBasedQueryParam.companyId,
+        },
+      },
+      relations: {
+        companyUsers: true,
+      },
+    });
 
     if (!users) {
       throw new NotFoundException('No users found');
