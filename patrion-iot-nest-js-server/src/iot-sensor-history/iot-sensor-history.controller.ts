@@ -6,12 +6,14 @@ import {
   CreateRoleBasedQueryParam,
   JwtAuthGuard,
   RolesGuard,
+  TokenPayloadDecorator,
   UserRoles,
 } from 'src/utils';
 import {
   ListIotSensorHistoryInput,
   ListIotSensorHistoryPayload,
   RoleBasedQueryParameter,
+  TokenPayload,
   UserRoleEnum,
 } from 'models';
 
@@ -31,6 +33,7 @@ export class IotSensorHistoryController {
   @ApiGenericResponse(ListIotSensorHistoryPayload, 'LIST', 'IOT SENSOR HISTORY')
   @Get('list')
   async list(
+    @TokenPayloadDecorator() tokenPayload: TokenPayload,
     @Query() listInput: ListIotSensorHistoryInput,
     @CreateRoleBasedQueryParam('data')
     roleBasedQueryParam: RoleBasedQueryParameter,
@@ -38,6 +41,7 @@ export class IotSensorHistoryController {
     return await this.iotSensorHistoryService.list(
       roleBasedQueryParam,
       listInput,
+      tokenPayload.userId,
     );
   }
 }

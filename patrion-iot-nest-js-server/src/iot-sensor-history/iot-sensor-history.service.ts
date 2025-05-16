@@ -4,13 +4,12 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CompanyIotSensorEntity, IotSensorHistoryEntity } from 'database';
 import {
-  CompanyIotSensorEntity,
-  IotSensorEntity,
-  IotSensorHistoryEntity,
-} from 'database';
-import {
+  ActionTypeEnum,
+  CreateViewedLogEvent,
   ListIotSensorHistoryInput,
   ListIotSensorHistoryPayload,
   RoleBasedQueryParameter,
@@ -24,11 +23,13 @@ export class IotSensorHistoryService {
     private readonly iotSensorHistoryRepository: Repository<IotSensorHistoryEntity>,
     @InjectRepository(CompanyIotSensorEntity)
     private readonly companyIotSensorRepository: Repository<CompanyIotSensorEntity>,
+    private _eventEmitter: EventEmitter2,
   ) {}
 
   async list(
     roleBasedQueryParam: RoleBasedQueryParameter,
     listInput: ListIotSensorHistoryInput,
+    userId: string,
   ): Promise<ListIotSensorHistoryPayload[] | any> {
     const where: { [key: string]: any } = {
       iotSensorId: listInput.sensorId,
@@ -60,6 +61,12 @@ export class IotSensorHistoryService {
 
     if (!iotSensorHistories)
       throw new BadRequestException('Sensor history not found');
+
+    const createViewedLogEvent = new CreateViewedLogEvent();
+    createViewedLogEvent.actionType = ActionTypeEnum.viewedLog;
+    createViewedLogEvent.type = 'success';
+    createViewedLogEvent.userId = userId;
+    this._eventEmitter.emit('action-log.create', createViewedLogEvent);
 
     return iotSensorHistories.map((history) => {
       return {
