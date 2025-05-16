@@ -20,6 +20,7 @@ import { CompanyModule } from './company/company.module';
 import { CompanyUserModule } from './company-user/company-user.module';
 import { IotSensorModule } from './iot-tsensor/iot-tsensor.module';
 import { CompanyIotSensorModule } from './company-iot-sensor/company-iot-sensor.module';
+import { IotSensorHistoryModule } from './iot-sensor-history/iot-sensor-history.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { CompanyIotSensorModule } from './company-iot-sensor/company-iot-sensor.
     CompanyUserModule,
     IotSensorModule,
     CompanyIotSensorModule,
+    IotSensorHistoryModule,
   ],
   controllers: [],
   providers: [
