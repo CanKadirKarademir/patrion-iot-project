@@ -24,13 +24,13 @@ export class ActionLogEntity {
 
   @Column({
     type: 'enum',
-    enum: ['success', 'failure'],
+    enum: ['success', 'failure', 'suspicious'],
   })
   type: string;
 
   @Column({
     type: 'enum',
-    enum: ['typeorm', 'http'],
+    enum: ['typeorm', 'http', 'suspicious_data'],
     nullable: true,
     name: 'exception_type',
   })

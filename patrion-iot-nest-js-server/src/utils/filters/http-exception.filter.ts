@@ -22,11 +22,6 @@ export class HttpExceptionFilter implements ExceptionFilter {
     };
     const uri = request.url.split('/')[1].toUpperCase();
 
-    //find ip address
-    // const ip =
-    //   request.headers['x-forwarded-for'] || request.connection.remoteAddress;
-    // console.log('ip', ip);
-
     if (uri !== 'AUTH') {
       const httpFailureEvent = new CreateHttpFailureEvent();
       httpFailureEvent.url = request.url;

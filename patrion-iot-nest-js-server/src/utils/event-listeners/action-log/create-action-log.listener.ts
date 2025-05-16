@@ -5,6 +5,7 @@ import { ActionLogEntity } from 'database';
 import {
   CreateHttpFailureEvent,
   CreateSuccessEvent,
+  CreateSuspiciousDataEvent,
   CreateTypeOrmFailureEvent,
 } from 'models';
 import { Repository } from 'typeorm';
@@ -21,7 +22,8 @@ export class CreateActionLogListener {
     actionLog:
       | CreateSuccessEvent
       | CreateHttpFailureEvent
-      | CreateTypeOrmFailureEvent,
+      | CreateTypeOrmFailureEvent
+      | CreateSuspiciousDataEvent,
   ) {
     const actionLogEntity = this._actionLogRepository.create(actionLog);
     this._actionLogRepository.save(actionLogEntity);

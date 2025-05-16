@@ -1,8 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Type } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { ClientProxy } from '@nestjs/microservices';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IotSensorHistoryEntity } from 'database';
-import { SensorDataInput } from 'models';
+import { CreateSuspiciousDataEvent, SensorDataInput } from 'models';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -10,9 +11,9 @@ export class MqttService {
   constructor(
     @Inject('MQTT_SERVICE')
     private readonly client: ClientProxy,
-
     @InjectRepository(IotSensorHistoryEntity)
     private iotSensorHistoryRepository: Repository<IotSensorHistoryEntity>,
+    private _eventEmitter: EventEmitter2,
   ) {}
 
   async sendNotification() {
@@ -40,6 +41,20 @@ export class MqttService {
   }
 
   async insertData(data: SensorDataInput) {
+    if (
+      data.temperature === null ||
+      data.humidity === null ||
+      data.sensor_id === null ||
+      data.timestamp === null
+    ) {
+      const createSuspiciousDataEvent = new CreateSuspiciousDataEvent();
+      createSuspiciousDataEvent.exceptionType = 'suspicious_data';
+      createSuspiciousDataEvent.type = 'suspicious';
+      createSuspiciousDataEvent.body = data;
+
+      this._eventEmitter.emit('action-log.create', createSuspiciousDataEvent);
+    }
+
     const sensorHistory = this.iotSensorHistoryRepository.create({
       sensor_id: data.sensor_id,
       timestamp: data.timestamp,
