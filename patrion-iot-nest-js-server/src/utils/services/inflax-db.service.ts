@@ -6,10 +6,8 @@ export class InfluxDBService {
   private org = 'patrion-iot';
   private bucket = 'patrion-iot';
   constructor() {
-    const token =
-      process.env.INFLUXDB_TOKEN ||
-      'XWWMQnTM-mHdhnWAwmLn-awX5ESDz4lho_Wr7TEIGJETZmFdjvkox1TpCUFfa3ZSkKYbGDgLQbThfymhyRg8SQ==';
-    const url = 'http://localhost:8086';
+    const token = process.env.INFLUXDB_TOKEN;
+    const url = process.env.INFLUXDB_URL;
 
     this.client = new InfluxDB({ url, token });
   }
@@ -21,7 +19,7 @@ export class InfluxDBService {
       .tag('sensor_id', data.sensor_id)
       .floatField('temperature', data.temperature)
       .floatField('humidity', data.humidity)
-      .timestamp(new Date(data.timestamp * 1000)); // convert seconds to ms
+      .timestamp(new Date(data.timestamp * 1000));
 
     writeClient.writePoint(point);
     await writeClient.close();

@@ -10,3 +10,4 @@ export * from './company-user';
 export * from './iot-sensor';
 export * from './company-iot-sensor';
 export * from './rol-based-query';
+export * from './mqtt';

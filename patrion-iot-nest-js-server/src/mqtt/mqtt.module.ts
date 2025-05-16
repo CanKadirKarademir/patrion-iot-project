@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import { MqttController } from './mqtt.controller';
 import { MqttService } from './mqtt.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { Type } from 'class-transformer';
+import { mqttEntities } from './mqtt.entities';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -17,6 +20,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
         },
       },
     ]),
+    TypeOrmModule.forFeature([...mqttEntities]),
   ],
   controllers: [MqttController],
   providers: [MqttService],

@@ -4,8 +4,9 @@ import {
   CompanyIotSensorEntity,
   CompanyUserEntity,
   UserEntity,
+  IotSensorEntity,
+  IotSensorHistoryEntity,
 } from 'database';
-import { IotSensorEntity } from 'database/entities/iot-sensor';
 
 export const entities = [
   ActionLogEntity,
@@ -14,4 +15,5 @@ export const entities = [
   CompanyUserEntity,
   IotSensorEntity,
   CompanyIotSensorEntity,
+  IotSensorHistoryEntity,
 ];
