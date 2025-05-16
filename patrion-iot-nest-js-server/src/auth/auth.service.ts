@@ -48,7 +48,7 @@ export class AuthService {
 
     const token = this._jwtService.sign(tokenPayload, {
       privateKey: this.configService.get('JWT_SECRET_KEY'),
-      expiresIn: '1h',
+      expiresIn: '7h',
     });
 
     return {

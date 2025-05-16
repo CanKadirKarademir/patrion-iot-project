@@ -2,7 +2,7 @@ import { ApiProperty, IntersectionType } from '@nestjs/swagger';
 import { IdAbstract } from 'models/abstracts';
 import { CreateCompanyIotSensorInput } from '../input';
 
-export class ListAllIotSensorPayload extends IntersectionType(
+export class ListAllCompanyIotSensorPayload extends IntersectionType(
   IdAbstract,
   CreateCompanyIotSensorInput,
 ) {
