@@ -12,7 +12,9 @@ import { UserService } from './user.service';
 import {
   ApiGenericHeader,
   ApiGenericResponse,
+  RolesGuard,
   TokenPayloadDecorator,
+  UserRoles,
 } from 'src/utils';
 import { JwtAuthGuard } from 'src/utils';
 import {
@@ -23,10 +25,12 @@ import {
   TokenPayload,
   UpdateUserInput,
   UpdateUserPayload,
+  UserRoleEnum,
 } from 'models';
 
 @ApiGenericHeader('User')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@UserRoles(UserRoleEnum.SystemAdmin, UserRoleEnum.CompanyAdmin)
 @Controller('user')
 export class UserController {
   constructor(private readonly _userService: UserService) {}

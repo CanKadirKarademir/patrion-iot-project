@@ -1,3 +1,4 @@
+import { TokenPayload } from 'models';
 import {
   CanActivate,
   ExecutionContext,
@@ -19,14 +20,10 @@ export class JwtAuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
+      const payload: TokenPayload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET || 'secret',
       });
 
-      //TODO : Verify işleminden sonra kullanıcının şirketinin sözleşmesi ve modülleri kontrol edilmeli
-
-      // 💡 We're assigning the payload to the request object here
-      // so that we can access it in our route handlers
       request['user'] = payload;
     } catch {
       throw new UnauthorizedException();

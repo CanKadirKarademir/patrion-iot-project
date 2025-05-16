@@ -8,7 +8,13 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiGenericHeader, ApiGenericResponse, JwtAuthGuard } from 'src/utils';
+import {
+  ApiGenericHeader,
+  ApiGenericResponse,
+  JwtAuthGuard,
+  RolesGuard,
+  UserRoles,
+} from 'src/utils';
 import { CompanyService } from './company.service';
 import {
   CreateCompanyInput,
@@ -17,10 +23,12 @@ import {
   ListAllCompanyPayload,
   UpdateCompanyInput,
   UpdateCompanyPayload,
+  UserRoleEnum,
 } from 'models';
 
 @ApiGenericHeader('Company')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@UserRoles(UserRoleEnum.SystemAdmin)
 @Controller('company')
 export class CompanyController {
   constructor(private readonly _companyService: CompanyService) {}

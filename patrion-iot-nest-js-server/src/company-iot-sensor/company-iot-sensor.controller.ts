@@ -1,16 +1,28 @@
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
-import { ApiGenericHeader, ApiGenericResponse, JwtAuthGuard } from 'src/utils';
+import {
+  ApiGenericHeader,
+  ApiGenericResponse,
+  JwtAuthGuard,
+  RolesGuard,
+  UserRoles,
+} from 'src/utils';
 import { CompanyIotSensorService } from './company-iot-sensor.service';
 import {
   CreateCompanyIotSensorInput,
   CreateCompanyIotSensorPayload,
   ListAllCompanyIotSensorInput,
   ListAllCompanyIotSensorPayload,
+  UserRoleEnum,
 } from 'models';
 import { ApiOperation } from '@nestjs/swagger';
 
 @ApiGenericHeader('Company Iot Sensor')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
+@UserRoles(
+  UserRoleEnum.SystemAdmin,
+  UserRoleEnum.CompanyAdmin,
+  UserRoleEnum.User,
+)
 @Controller('company-iot-sensor')
 export class CompanyIotSensorController {
   constructor(
