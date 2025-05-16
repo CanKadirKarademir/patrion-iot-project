@@ -7,6 +7,7 @@ import {
   ListAllCompanyIotSensorInput,
   ListAllCompanyIotSensorPayload,
 } from 'models';
+import { ApiOperation } from '@nestjs/swagger';
 
 @ApiGenericHeader('Company Iot Sensor')
 @UseGuards(JwtAuthGuard)
@@ -21,6 +22,10 @@ export class CompanyIotSensorController {
     'LIST',
     'COMPANY IOT SENSOR',
   )
+  @ApiOperation({
+    summary:
+      'List all company IoT sensors for a specific company, user, and IoT sensor',
+  })
   @Get('list')
   async listAll(
     @Query() listInput: ListAllCompanyIotSensorInput,
