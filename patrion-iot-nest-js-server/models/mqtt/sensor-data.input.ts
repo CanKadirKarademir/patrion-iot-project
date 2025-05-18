@@ -13,7 +13,7 @@ export class SensorDataInput {
     description: 'The timestamp of the sensor data',
     example: '1234567890abcdef12345678',
   })
-  timestamp?: Date;
+  timestamp?: number;
 
   @ApiProperty({
     type: Number,

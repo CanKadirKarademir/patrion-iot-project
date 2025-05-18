@@ -7,6 +7,10 @@ import { ResponseTransformInterceptor } from './utils';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { AuthModule } from './auth/auth.module';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import {
+  mqttWebsocketTestScenarioSwaggerModules,
+  userAuthorisationsTestScenarioSwaggerModules,
+} from './utils/swagger-configurations';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
@@ -84,13 +88,14 @@ async function bootstrap() {
       'bearer', // This is the name of the security scheme)
     )
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document, swaggerUIConfigs);
 
-  //Question Swagger Config
-  const questionConfig = new DocumentBuilder()
-    .setTitle(configService.get('QUESTION_TITLE'))
-    .setDescription(configService.get('QUESTION_DESCRIPTION'))
+  //MQTT Websocket Test Senaryo Config
+  const mqttWebsocketTestConfig = new DocumentBuilder()
+    .setTitle(configService.get('PROJECT_TITLE'))
+    .setDescription(configService.get('PROJECT_DESCRIPTION_MQTT_WEBSOCKET'))
     .setVersion('1.0')
     .addBearerAuth(
       {
@@ -103,8 +108,61 @@ async function bootstrap() {
     )
     .build();
 
+  const mqttWebsocketTestConfigDocument = SwaggerModule.createDocument(
+    app,
+    mqttWebsocketTestConfig,
+    {
+      include: [...mqttWebsocketTestScenarioSwaggerModules],
+    },
+  );
+
+  SwaggerModule.setup(
+    'api/mqtt-websocket-test-scenario',
+    app,
+    mqttWebsocketTestConfigDocument,
+    swaggerUIConfigs,
+  );
+
+  //User Yetkilendirme Test Senaryo Config
+  const userAuthorisationsTestConfig = new DocumentBuilder()
+    .setTitle(configService.get('PROJECT_TITLE'))
+    .setDescription(
+      configService.get('PROJECT_DESCRIPTION_USER_AUTHORISATIONS'),
+    )
+    .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        in: 'header',
+      },
+      'bearer', // This is the name of the security scheme)
+    )
+    .build();
+
+  const userAuthorisationsTestConfigDocument = SwaggerModule.createDocument(
+    app,
+    userAuthorisationsTestConfig,
+    {
+      include: [...userAuthorisationsTestScenarioSwaggerModules],
+    },
+  );
+
+  SwaggerModule.setup(
+    'api/user-authorisations-test-scenario',
+    app,
+    userAuthorisationsTestConfigDocument,
+    swaggerUIConfigs,
+  );
   await app.startAllMicroservices();
   await app.listen(port);
   Logger.log(`🚀 Application is running on: http://localhost:${port}/api`);
+  Logger.log(
+    `🚀 Application is running on: http://localhost:${port}/api/mqtt-websocket-test-scenario`,
+  );
+  Logger.log(
+    `🚀 Application is running on: http://localhost:${port}/api/user-authorisations-test-scenario`,
+  );
 }
 bootstrap();

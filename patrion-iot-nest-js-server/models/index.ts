@@ -12,3 +12,4 @@ export * from './company-iot-sensor';
 export * from './rol-based-query';
 export * from './mqtt';
 export * from './iot-sensor-history';
+export * from './web-socket-gate-way';

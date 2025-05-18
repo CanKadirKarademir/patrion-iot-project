@@ -1,5 +1,5 @@
 import { InfluxDB, Point } from '@influxdata/influxdb-client';
-import { CreateEntryInput } from 'models';
+import { SensorDataInput } from 'models';
 
 export class InfluxDBService {
   private client: InfluxDB;
@@ -12,43 +12,43 @@ export class InfluxDBService {
     this.client = new InfluxDB({ url, token });
   }
 
-  async writeDataWithPoint(data: CreateEntryInput): Promise<void> {
-    const writeClient = this.client.getWriteApi(this.org, this.bucket, 'ns');
+  async writeSensorData(createInput: SensorDataInput) {
+    const writeApi = this.client.getWriteApi(this.bucket, this.org);
+    const point = new Point('sensor_data')
+      .tag('sensor_id', createInput.sensor_id)
+      .floatField('temperature', createInput.temperature)
+      .floatField('humidity', createInput.humidity)
+      .timestamp(new Date(createInput.timestamp));
 
-    const point = new Point('measurement1')
-      .tag('sensor_id', data.sensor_id)
-      .floatField('temperature', data.temperature)
-      .floatField('humidity', data.humidity)
-      .timestamp(new Date(data.timestamp * 1000));
-
-    writeClient.writePoint(point);
-    await writeClient.close();
+    writeApi.writePoint(point);
+    try {
+      await writeApi.flush();
+      console.log("Veri InfluxDB'ye yazıldı:", createInput);
+    } catch (error) {
+      console.error('Veri yazma hatası:', error);
+    } finally {
+      await writeApi.close();
+    }
   }
 
-  async getData(sensorId: string): Promise<any[]> {
+  async readSensorData(sensorId, start = '-2d', stop = 'now()') {
     const queryApi = this.client.getQueryApi(this.org);
-    const fluxQuery = `
-      from(bucket: "${this.bucket}")
-        |> range(start: -30d)
-        |> filter(fn: (r) => r._measurement == "measurement1")
-        |> filter(fn: (r) => r.sensor_id == "${sensorId}")
-        |> sort(columns: ["_time"], desc: true)
-    `;
+    let fluxQuery = `
+    from(bucket: "${this.bucket}")
+    |> range(start: ${start}, stop: ${stop})
+    |> filter(fn: (r) => r._measurement == "sensor_data")
+  `;
 
-    const results: any[] = [];
-    return new Promise((resolve, reject) => {
-      queryApi.queryRows(fluxQuery, {
-        next(row, tableMeta) {
-          const o = tableMeta.toObject(row);
-          results.push(o);
-        },
-        error(error) {
-          reject(error);
-        },
-        complete() {
-          resolve(results);
-        },
-      });
-    });
+    if (sensorId) {
+      fluxQuery += `|> filter(fn: (r) => r.sensor_id == "${sensorId}")`;
+    }
+    fluxQuery += `|> yield(name: "mean")`;
+    try {
+      const results = await queryApi.collectRows(fluxQuery);
+
+      return results;
+    } catch (error) {
+      return [];
+    }
   }
 }

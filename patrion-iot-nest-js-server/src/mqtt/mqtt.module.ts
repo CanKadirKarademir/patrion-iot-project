@@ -5,6 +5,7 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
 import { Type } from 'class-transformer';
 import { mqttEntities } from './mqtt.entities';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { InfluxDBService } from 'src/utils/services';
 
 @Module({
   imports: [
@@ -23,6 +24,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     TypeOrmModule.forFeature([...mqttEntities]),
   ],
   controllers: [MqttController],
-  providers: [MqttService],
+  providers: [MqttService, InfluxDBService],
 })
 export class MqttModule {}

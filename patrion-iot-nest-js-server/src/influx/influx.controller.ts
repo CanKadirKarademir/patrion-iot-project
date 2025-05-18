@@ -8,13 +8,13 @@ import { CreateEntryInput } from 'models';
 export class InfluxController {
   constructor(private readonly influxService: InfluxService) {}
 
-  @Get('read')
-  async readData() {
-    return await this.influxService.getData();
-  }
+  // @Get('read')
+  // async readData() {
+  //   return await this.influxService.getData();
+  // }
 
-  @Post('write')
-  async writeData(@Body() createPoint: CreateEntryInput) {
-    return this.influxService.writeDataWithPoint(createPoint);
-  }
+  // @Post('write')
+  // async writeData(@Body() createPoint: CreateEntryInput) {
+  //   return this.influxService.writeDataWithPoint(createPoint);
+  // }
 }

@@ -21,6 +21,7 @@ import { CompanyUserModule } from './company-user/company-user.module';
 import { IotSensorModule } from './iot-tsensor/iot-tsensor.module';
 import { CompanyIotSensorModule } from './company-iot-sensor/company-iot-sensor.module';
 import { IotSensorHistoryModule } from './iot-sensor-history/iot-sensor-history.module';
+import { WebSocketGateWayModule } from './web-socket-gate-way/web-socket-gate-way.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { IotSensorHistoryModule } from './iot-sensor-history/iot-sensor-history.
     IotSensorModule,
     CompanyIotSensorModule,
     IotSensorHistoryModule,
+    WebSocketGateWayModule,
   ],
   controllers: [],
   providers: [

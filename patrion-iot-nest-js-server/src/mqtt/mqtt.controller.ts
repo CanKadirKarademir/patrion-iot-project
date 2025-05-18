@@ -1,4 +1,4 @@
-import { Controller, Post } from '@nestjs/common';
+import { Controller, Get, Post, Query } from '@nestjs/common';
 import {
   Ctx,
   MessagePattern,
@@ -25,5 +25,10 @@ export class MqttController {
   @Post('send-notification')
   sendNotification() {
     this.mqttService.sendNotification();
+  }
+
+  @Get('find')
+  async readSensorData(@Query('id') id: string) {
+    return await this.mqttService.readSensorData(id);
   }
 }

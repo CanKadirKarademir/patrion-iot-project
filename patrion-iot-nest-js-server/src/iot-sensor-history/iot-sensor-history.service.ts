@@ -14,6 +14,7 @@ import {
   ListIotSensorHistoryPayload,
   RoleBasedQueryParameter,
 } from 'models';
+import { InfluxDBService } from 'src/utils/services';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -24,6 +25,7 @@ export class IotSensorHistoryService {
     @InjectRepository(CompanyIotSensorEntity)
     private readonly companyIotSensorRepository: Repository<CompanyIotSensorEntity>,
     private _eventEmitter: EventEmitter2,
+    private influxDBService: InfluxDBService,
   ) {}
 
   async list(
@@ -50,17 +52,23 @@ export class IotSensorHistoryService {
       throw new ForbiddenException('You do not have access to this sensor');
     }
 
-    const iotSensorHistories = await this.iotSensorHistoryRepository.find({
-      where: {
-        sensor_id: companyIotSensor.iotSensor.sensorId,
-      },
-      order: {
-        createdAt: 'DESC',
-      },
-    });
+    //PostgreSQL Kaydı
+    // const iotSensorHistories = await this.iotSensorHistoryRepository.find({
+    //   where: {
+    //     sensor_id: companyIotSensor.iotSensor.sensorId,
+    //   },
+    //   order: {
+    //     createdAt: 'DESC',
+    //   },
+    // });
 
-    if (!iotSensorHistories)
-      throw new BadRequestException('Sensor history not found');
+    // if (!iotSensorHistories)
+    //   throw new BadRequestException('Sensor history not found');
+
+    //InfluxDB Kaydı
+    const results = await this.influxDBService.readSensorData(
+      companyIotSensor.iotSensor.sensorId,
+    );
 
     const createViewedLogEvent = new CreateViewedLogEvent();
     createViewedLogEvent.actionType = ActionTypeEnum.viewedLog;
@@ -68,16 +76,6 @@ export class IotSensorHistoryService {
     createViewedLogEvent.userId = userId;
     this._eventEmitter.emit('action-log.create', createViewedLogEvent);
 
-    return iotSensorHistories.map((history) => {
-      return {
-        id: history.id,
-        sensorId: history.sensor_id,
-        timestamp: history.timestamp,
-        temperature: history.temperature,
-        humidity: history.humidity,
-        createdAt: history.createdAt,
-        updatedAt: history.updatedAt,
-      };
-    });
+    return results;
   }
 }
