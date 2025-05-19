@@ -27,7 +27,7 @@ services:
       INFLUXDB_BUCKET: ${INFLUXDB_BUCKET}
       MQTT_URL: ${MQTT_URL}
     ports:
-      - '3200:3200'
+      - '4000:4000'
     networks:
       local_networks:
       default:
